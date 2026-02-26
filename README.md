@@ -4,19 +4,6 @@
 
 A professional-grade security analysis tool for Docker container images with an **elite cybersecurity-themed interface**. LayerGuard identifies malicious or insecure packages within individual container layers, analyzes inherited vulnerabilities across image build history, and generates **stunning interactive HTML reports** with advanced animations.
 
-## 🎨 Elite Cybersecurity Theme
-
-LayerGuard features a **professional hacker aesthetic** with:
-- 🌌 **Live Matrix rain background** - Iconic green cascading code
-- ⚡ **Animated cyber grid** - Moving grid pattern with neon glow
-- 🔦 **Scanning line effect** - Continuous security scan visualization
-- ✨ **Floating particles** - Atmospheric depth and motion
-- 💫 **Interactive hover effects** - Smooth transformations on all elements
-- 🎨 **Glassmorphism design** - Modern frosted glass cards
-- 🌈 **Gradient text effects** - Cyber green to blue transitions
-- 🔥 **Glitch animations** - Professional cyberpunk aesthetic
-
-**Zero childish elements. Pure industry-grade design.**
 
 ## 🎯 What is LayerGuard?
 
