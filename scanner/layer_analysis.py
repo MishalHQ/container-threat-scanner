@@ -5,6 +5,7 @@ Extracts and analyzes container image layers
 
 import logging
 import re
+import json
 from .utils import run_command
 
 
@@ -74,7 +75,7 @@ class LayerAnalyzer:
                         'type': self._classify_layer(created_by)
                     })
             
-            # Identify base image (usually the last FROM instruction)
+            # Identify base image using docker inspect (more reliable)
             self._identify_base_image()
             
             self.logger.info(f"✓ Analyzed {len(self.layers)} layers")
@@ -116,18 +117,108 @@ class LayerAnalyzer:
     
     def _identify_base_image(self):
         """
-        Identify the base image from layer history
+        Identify the base image using docker inspect (more reliable than parsing history)
+        """
+        self.logger.debug("Identifying base image using docker inspect...")
+        
+        try:
+            # Method 1: Use docker inspect to get Config.Image
+            result = run_command([
+                'docker', 'inspect',
+                '--format', '{{json .Config}}',
+                self.image_name
+            ])
+            
+            config = json.loads(result.stdout.strip())
+            
+            # Try to get base image from labels or config
+            if 'Image' in config and config['Image']:
+                # This contains the parent image SHA or name
+                parent_image = config['Image']
+                
+                # If it's a SHA, try to resolve it to a name
+                if parent_image.startswith('sha256:'):
+                    self.base_image = self._resolve_base_from_history()
+                else:
+                    self.base_image = parent_image
+            else:
+                # Fallback to history parsing
+                self.base_image = self._resolve_base_from_history()
+            
+            # Validate the base image string
+            if self.base_image and self._is_valid_base_image(self.base_image):
+                self.logger.debug(f"Base image identified: {self.base_image}")
+            else:
+                self.logger.warning("Could not reliably identify base image")
+                self.base_image = "Unknown (Parsing Issue)"
+                
+        except Exception as e:
+            self.logger.warning(f"Error identifying base image: {str(e)}")
+            self.base_image = "Unknown (Parsing Issue)"
+    
+    def _resolve_base_from_history(self):
+        """
+        Fallback method: Extract base image from docker history
+        
+        Returns:
+            str: Base image name or None
         """
         for layer in reversed(self.layers):
             if layer['type'] == 'base':
-                # Try to extract base image name from created_by
-                match = re.search(r'FROM\s+([^\s]+)', layer['created_by'], re.IGNORECASE)
-                if match:
-                    self.base_image = match.group(1)
-                    break
+                created_by = layer['created_by']
+                
+                # Try multiple patterns to extract base image
+                patterns = [
+                    r'FROM\s+([^\s]+)',  # Standard FROM instruction
+                    r'#\(nop\)\s+FROM\s+([^\s]+)',  # Nop FROM
+                ]
+                
+                for pattern in patterns:
+                    match = re.search(pattern, created_by, re.IGNORECASE)
+                    if match:
+                        base_name = match.group(1)
+                        # Clean up the base name
+                        base_name = base_name.strip('"\'')
+                        if base_name and base_name != 'scratch':
+                            return base_name
         
-        if not self.base_image:
-            self.base_image = "Unknown"
+        # If no FROM found, try to infer from image name
+        # For official images like nginx:latest, the base might be debian/alpine
+        if ':' in self.image_name:
+            image_base = self.image_name.split(':')[0]
+            # Common base images
+            if any(base in image_base.lower() for base in ['alpine', 'debian', 'ubuntu', 'centos', 'fedora']):
+                return self.image_name
+        
+        return None
+    
+    def _is_valid_base_image(self, base_image):
+        """
+        Validate that base image string is clean and usable
+        
+        Args:
+            base_image (str): Base image string to validate
+            
+        Returns:
+            bool: True if valid, False otherwise
+        """
+        if not base_image:
+            return False
+        
+        # Check for broken artifacts
+        invalid_patterns = [
+            r'\$\w+',  # Shell variables like $server
+            r'[{}]',   # Curly braces
+            r'\\[nrt]',  # Escape sequences
+            r'^\s*$',  # Empty or whitespace only
+        ]
+        
+        for pattern in invalid_patterns:
+            if re.search(pattern, base_image):
+                self.logger.warning(f"Invalid base image pattern detected: {base_image}")
+                return False
+        
+        return True
     
     def get_base_layers(self):
         """
