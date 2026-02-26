@@ -1,16 +1,40 @@
-# Container Image Threat Scanner
+# 🛡️ LayerGuard
 
-A professional-grade, layer-aware forensic security analysis tool for Docker container images. This tool identifies malicious or insecure packages within individual container layers, analyzes inherited vulnerabilities across image build history, and generates actionable remediation steps to enhance container security visibility and integrity.
+**Layer-Aware Container Image Forensic Threat Scanner**
 
-## 🎯 Project Overview
+A professional-grade security analysis tool for Docker container images. LayerGuard identifies malicious or insecure packages within individual container layers, analyzes inherited vulnerabilities across image build history, and generates actionable remediation steps with beautiful HTML reports.
 
-Modern container images are built in layers, with each layer potentially introducing security vulnerabilities. This scanner provides:
+## 🎯 What is LayerGuard?
 
-- **Layer-Aware Analysis**: Identifies which vulnerabilities come from base images vs. application layers
-- **Comprehensive SBOM**: Generates complete Software Bill of Materials using Syft
-- **Vulnerability Detection**: Scans for CVEs using Trivy with severity classification
-- **Intelligent Remediation**: Provides actionable, prioritized security recommendations
-- **Cross-Platform**: Works seamlessly on Windows and macOS
+Modern container images are built in layers, with each layer potentially introducing security vulnerabilities. LayerGuard provides:
+
+- **🔍 Layer-Aware Analysis**: Identifies which vulnerabilities come from base images vs. application layers
+- **📋 Comprehensive SBOM**: Generates complete Software Bill of Materials using Syft
+- **🚨 Vulnerability Detection**: Scans for CVEs using Trivy with severity classification
+- **💡 Intelligent Remediation**: Provides actionable, prioritized security recommendations
+- **📊 Beautiful HTML Reports**: Professional, human-friendly security reports that auto-open in your browser
+- **🌐 Cross-Platform**: Works seamlessly on Windows and macOS
+
+## ✨ Key Features
+
+### 🎨 Professional HTML Reports
+- **Auto-opens in browser** after each scan
+- **Modern, responsive design** with gradient styling
+- **Security dashboard** with visual severity indicators
+- **Top 5 high-severity vulnerabilities** with plain English explanations
+- **Actionable remediation steps** for non-technical users
+
+### 🔬 Advanced Analysis
+- **Base image detection** using `docker inspect` for reliability
+- **Layer classification** (base, dependency, application, build, runtime)
+- **Vulnerability attribution** (inherited vs application-introduced)
+- **SBOM generation** for compliance and auditing
+
+### 🛠️ Developer-Friendly
+- **Clean CLI interface** with progress indicators
+- **JSON reports** for automation and CI/CD integration
+- **Verbose logging** for debugging
+- **Exit codes** for pipeline integration
 
 ## 🏗️ Architecture
 
@@ -19,13 +43,17 @@ container-threat-scanner/
 │
 ├── scanner/                    # Core scanning modules
 │   ├── __init__.py            # Package initialization
-│   ├── layer_analysis.py      # Docker layer forensics
+│   ├── layer_analysis.py      # Docker layer forensics (FIXED base image detection)
 │   ├── sbom.py                # SBOM generation (Syft)
 │   ├── vulnerability.py       # Vulnerability scanning (Trivy)
 │   ├── remediation.py         # Remediation engine
+│   ├── report_generator.py    # HTML report generator (NEW)
 │   └── utils.py               # Utilities and validation
 │
 ├── reports/                    # Generated security reports
+│   ├── sbom_*.json            # Software Bill of Materials
+│   ├── vuln_*.json            # Vulnerability data
+│   └── report_*.html          # HTML security reports (NEW)
 │
 ├── main.py                     # CLI entry point
 ├── requirements.txt            # Python dependencies
@@ -89,7 +117,7 @@ python --version
    
    *Note: This project uses only Python standard library, so no external packages are required.*
 
-3. **Verify environment**
+3. **Run your first scan**
    ```bash
    python main.py --image nginx:latest
    ```
@@ -101,6 +129,16 @@ python --version
 ```bash
 python main.py --image nginx:latest
 ```
+
+**What happens:**
+1. ✅ Validates environment (Docker, Syft, Trivy)
+2. 🐳 Pulls the Docker image
+3. 📦 Analyzes image layers
+4. 📋 Generates SBOM
+5. 🔍 Scans for vulnerabilities
+6. 💡 Generates remediation suggestions
+7. 📊 Creates HTML report
+8. 🌐 **Auto-opens report in your browser**
 
 ### Verbose Mode
 
@@ -116,13 +154,27 @@ python main.py --image mycompany/myapp:1.0.0
 
 ## 📊 Output Example
 
+### Console Output
+
 ```
 ╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
-║        Container Image Threat Scanner v1.0                   ║
-║        Layer-Aware Forensic Security Analysis                ║
+║                    🛡️  LayerGuard v2.0                       ║
+║        Layer-Aware Container Image Forensic Scanner          ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
+
+Step 1/6: Validating environment...
+✓ docker is installed
+✓ Docker daemon is running
+✓ syft is installed
+✓ trivy is installed
+
+Step 2/6: Pulling Docker image...
+Step 3/6: Analyzing image layers...
+Step 4/6: Generating Software Bill of Materials (SBOM)...
+Step 5/6: Scanning for vulnerabilities...
+Step 6/6: Generating HTML security report...
 
 ======================================================================
 SECURITY ANALYSIS REPORT: nginx:latest
@@ -148,50 +200,39 @@ Total Vulnerabilities: 127
 Base Layer Vulnerabilities:        98
 Application Layer Vulnerabilities: 29
 
-⚠️  Base layer vulnerabilities are inherited from the base image.
-   Consider updating the base image or switching to a more secure variant.
-
-💡 REMEDIATION SUGGESTIONS
-----------------------------------------------------------------------
-
-[CRITICAL PRIORITY]
-
-1. Found 2 CRITICAL vulnerabilities
-   Category: Critical Vulnerabilities
-   • openssl: 1.1.1n → 1.1.1t (CRITICAL)
-   • libssl1.1: 1.1.1n → 1.1.1t (CRITICAL)
-
-[HIGH PRIORITY]
-
-1. Update 12 vulnerable package(s) with available fixes
-   Category: Package Updates
-   • curl: 7.74.0 → 7.88.1 (HIGH)
-   • libcurl4: 7.74.0 → 7.88.1 (HIGH)
-   • nginx: 1.23.1 → 1.23.4 (HIGH)
-
-2. Base image contains 98 vulnerabilities
-   Category: Base Image
-   • Consider updating to a newer version of the base image: debian:bookworm-slim
-   • Check for security-focused base image variants (e.g., -alpine, -slim)
-   • Review base image security advisories
-
 📄 REPORTS
 ----------------------------------------------------------------------
 Reports saved in: /path/to/reports
   ├─ SBOM:              sbom_nginx_latest.json
-  └─ Vulnerabilities:   vuln_nginx_latest.json
+  ├─ Vulnerabilities:   vuln_nginx_latest.json
+  └─ HTML Report:       report_nginx_latest.html
 
 ======================================================================
 
-❌ SECURITY STATUS: CRITICAL - Immediate action required!
+🎉 LayerGuard Scan Complete — Opened Security Report in Browser
 ======================================================================
 ```
+
+### HTML Report Features
+
+The auto-generated HTML report includes:
+
+- **🎨 Modern Design**: Professional gradient styling with responsive layout
+- **📊 Security Dashboard**: Visual cards showing vulnerability counts by severity
+- **🎯 Layer Analysis**: Base vs application vulnerability breakdown
+- **⚠️ Top Vulnerabilities**: Top 5 HIGH/CRITICAL issues with:
+  - CVE ID and severity badge
+  - Affected package and versions
+  - **Plain English explanation** of the security impact
+  - **Remediation recommendations** with fix versions
+- **💡 Overall Recommendations**: Actionable steps to improve security
+- **✅ Security Status Badge**: Clear visual indicator of risk level
 
 ## 🔬 How Layer-Aware Analysis Works
 
 ### Layer Classification
 
-The scanner analyzes Docker image history to classify layers:
+LayerGuard analyzes Docker image history to classify layers:
 
 1. **Base Layers**: FROM instructions and base OS packages
 2. **Dependency Layers**: Package installations (apt, yum, pip, npm)
@@ -229,7 +270,14 @@ This distinction helps prioritize remediation efforts and understand the securit
 - Base image optimization suggestions
 - Best practice recommendations
 
-### 4. Exit Codes
+### 4. HTML Reporting (NEW)
+- Professional, human-friendly reports
+- Auto-opens in default browser
+- Plain English vulnerability explanations
+- Visual severity indicators
+- Actionable remediation steps
+
+### 5. Exit Codes
 - `0`: Scan completed successfully, no critical issues
 - `1`: Scan failed due to error
 - `2`: Critical vulnerabilities detected
@@ -259,7 +307,7 @@ jobs:
           curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
       
-      - name: Run security scan
+      - name: Run LayerGuard scan
         run: |
           python main.py --image ${{ env.IMAGE_NAME }}
         continue-on-error: true
@@ -329,22 +377,32 @@ Error: Permission denied accessing Docker
 Solution (Linux): Add user to docker group: sudo usermod -aG docker $USER
 ```
 
+### Browser Doesn't Auto-Open
+```
+The HTML report is still generated in the reports/ directory.
+Manually open: reports/report_<image_name>.html
+```
+
+## 🆕 What's New in v2.0
+
+- ✅ **Fixed base image detection bug** - Now uses `docker inspect` for reliable parsing
+- ✅ **Professional HTML reports** - Beautiful, human-friendly security reports
+- ✅ **Auto-open in browser** - Reports automatically open after scan
+- ✅ **Plain English explanations** - Non-technical vulnerability descriptions
+- ✅ **Rebranded to LayerGuard** - Professional security tool branding
+- ✅ **Improved console output** - Cleaner, more informative terminal display
+
 ## 🤝 Contributing
 
-This is an educational/internship project. Contributions welcome:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📝 License
 
-MIT License - See LICENSE file for details
+MIT License - See [LICENSE](LICENSE) file for details
 
 ## 👨‍💻 Author
 
-DevSecOps Engineering Team
+LayerGuard Security Team
 
 ## 🔗 References
 
@@ -355,4 +413,4 @@ DevSecOps Engineering Team
 
 ---
 
-**Built with ❤️ for Container Security**
+**Built with ❤️ for Container Security by LayerGuard**
