@@ -1,6 +1,6 @@
 """
 LayerGuard HTML Report Generator
-Generates professional, human-friendly security reports
+Generates professional, cybersecurity-themed interactive reports
 """
 
 import logging
@@ -67,7 +67,7 @@ class HTMLReportGenerator:
     
     def _generate_html(self):
         """
-        Generate complete HTML report content
+        Generate complete HTML report content with elite cybersecurity theme
         
         Returns:
             str: HTML content
@@ -88,282 +88,805 @@ class HTMLReportGenerator:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LayerGuard Security Report - {self.image_name}</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+        
         * {{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }}
         
+        :root {{
+            --bg-dark: #0a0e27;
+            --bg-darker: #050814;
+            --cyber-green: #00ff41;
+            --cyber-blue: #00d9ff;
+            --neon-pink: #ff006e;
+            --neon-purple: #8b5cf6;
+            --critical-red: #ff0040;
+            --warning-orange: #ff9500;
+            --success-green: #00ff88;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --card-bg: rgba(15, 23, 42, 0.8);
+            --card-border: rgba(0, 217, 255, 0.3);
+            --glow-color: rgba(0, 255, 65, 0.5);
+        }}
+        
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            color: #333;
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }}
+        
+        /* Animated Matrix Background */
+        .matrix-bg {{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            pointer-events: none;
+        }}
+        
+        .matrix-bg canvas {{
+            display: block;
+            width: 100%;
+            height: 100%;
+        }}
+        
+        /* Animated Grid Background */
+        .grid-bg {{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            pointer-events: none;
+            animation: gridMove 20s linear infinite;
+        }}
+        
+        @keyframes gridMove {{
+            0% {{ transform: translateY(0); }}
+            100% {{ transform: translateY(50px); }}
+        }}
+        
+        /* Scanning Line Effect */
+        .scan-line {{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--cyber-blue), 
+                transparent);
+            box-shadow: 0 0 20px var(--cyber-blue);
+            z-index: 1;
+            animation: scan 4s linear infinite;
+        }}
+        
+        @keyframes scan {{
+            0% {{ transform: translateY(0); opacity: 0; }}
+            50% {{ opacity: 1; }}
+            100% {{ transform: translateY(100vh); opacity: 0; }}
+        }}
+        
+        /* Floating Particles */
+        .particles {{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }}
+        
+        .particle {{
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--cyber-green);
+            border-radius: 50%;
+            animation: float 15s infinite;
+            opacity: 0.6;
+        }}
+        
+        @keyframes float {{
+            0%, 100% {{ transform: translateY(0) translateX(0); opacity: 0; }}
+            50% {{ opacity: 0.6; }}
+            100% {{ transform: translateY(-100vh) translateX(100px); opacity: 0; }}
         }}
         
         .container {{
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
+            position: relative;
+            z-index: 2;
         }}
         
+        /* Header with Glitch Effect */
         .header {{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
+            background: linear-gradient(135deg, 
+                rgba(0, 217, 255, 0.1) 0%, 
+                rgba(139, 92, 246, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--cyber-blue);
+            padding: 60px 40px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 50px rgba(0, 217, 255, 0.2);
+        }}
+        
+        .header::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 217, 255, 0.1), 
+                transparent);
+            animation: shimmer 3s infinite;
+        }}
+        
+        @keyframes shimmer {{
+            0% {{ left: -100%; }}
+            100% {{ left: 100%; }}
         }}
         
         .header h1 {{
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyber-green), var(--cyber-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            position: relative;
+            animation: glitchText 5s infinite;
+            text-shadow: 
+                0 0 10px rgba(0, 255, 65, 0.5),
+                0 0 20px rgba(0, 255, 65, 0.3),
+                0 0 30px rgba(0, 255, 65, 0.2);
+        }}
+        
+        @keyframes glitchText {{
+            0%, 90%, 100% {{ transform: translate(0); }}
+            92% {{ transform: translate(-2px, 2px); }}
+            94% {{ transform: translate(2px, -2px); }}
+            96% {{ transform: translate(-2px, -2px); }}
+            98% {{ transform: translate(2px, 2px); }}
         }}
         
         .header .subtitle {{
-            font-size: 1.1em;
+            font-size: 1.3em;
+            color: var(--cyber-blue);
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
             opacity: 0.9;
         }}
         
         .header .image-name {{
-            background: rgba(255,255,255,0.2);
-            padding: 10px 20px;
-            border-radius: 6px;
-            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--cyber-green);
+            padding: 15px 30px;
+            border-radius: 8px;
+            margin-top: 30px;
             display: inline-block;
-            font-family: 'Courier New', monospace;
-            font-size: 1.2em;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.4em;
+            color: var(--cyber-green);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 65, 0.3),
+                inset 0 0 20px rgba(0, 255, 65, 0.1);
+            animation: pulse 2s infinite;
+        }}
+        
+        @keyframes pulse {{
+            0%, 100% {{ box-shadow: 0 0 20px rgba(0, 255, 65, 0.3), inset 0 0 20px rgba(0, 255, 65, 0.1); }}
+            50% {{ box-shadow: 0 0 30px rgba(0, 255, 65, 0.5), inset 0 0 30px rgba(0, 255, 65, 0.2); }}
         }}
         
         .content {{
-            padding: 40px;
+            padding: 60px 40px;
         }}
         
         .section {{
-            margin-bottom: 40px;
+            margin-bottom: 60px;
+            animation: fadeInUp 0.8s ease-out;
+        }}
+        
+        @keyframes fadeInUp {{
+            from {{
+                opacity: 0;
+                transform: translateY(30px);
+            }}
+            to {{
+                opacity: 1;
+                transform: translateY(0);
+            }}
         }}
         
         .section-title {{
-            font-size: 1.8em;
-            color: #667eea;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #667eea;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2em;
+            color: var(--cyber-blue);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--cyber-blue);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            display: inline-block;
         }}
         
+        .section-title::after {{
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--cyber-green);
+            animation: expandLine 2s ease-out forwards;
+        }}
+        
+        @keyframes expandLine {{
+            to {{ width: 100%; }}
+        }}
+        
+        /* Dashboard Cards with Hover Effects */
         .dashboard {{
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
         }}
         
         .card {{
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid var(--card-border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }}
+        
+        .card::before {{
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }}
+        
+        .card:hover::before {{
+            opacity: 1;
+            animation: rotate 4s linear infinite;
+        }}
+        
+        @keyframes rotate {{
+            0% {{ transform: rotate(0deg); }}
+            100% {{ transform: rotate(360deg); }}
+        }}
+        
+        .card:hover {{
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--cyber-green);
+            box-shadow: 
+                0 20px 60px rgba(0, 217, 255, 0.3),
+                0 0 40px rgba(0, 255, 65, 0.2);
         }}
         
         .card.critical {{
-            border-left-color: #dc3545;
-            background: #fff5f5;
+            border-color: var(--critical-red);
+            background: rgba(255, 0, 64, 0.05);
+        }}
+        
+        .card.critical:hover {{
+            border-color: var(--critical-red);
+            box-shadow: 
+                0 20px 60px rgba(255, 0, 64, 0.4),
+                0 0 40px rgba(255, 0, 64, 0.3);
         }}
         
         .card.high {{
-            border-left-color: #fd7e14;
-            background: #fff8f0;
+            border-color: var(--warning-orange);
+            background: rgba(255, 149, 0, 0.05);
+        }}
+        
+        .card.high:hover {{
+            border-color: var(--warning-orange);
+            box-shadow: 
+                0 20px 60px rgba(255, 149, 0, 0.4),
+                0 0 40px rgba(255, 149, 0, 0.3);
         }}
         
         .card.medium {{
-            border-left-color: #ffc107;
-            background: #fffbf0;
+            border-color: var(--cyber-blue);
+            background: rgba(0, 217, 255, 0.05);
         }}
         
         .card.low {{
-            border-left-color: #28a745;
-            background: #f0fff4;
+            border-color: var(--success-green);
+            background: rgba(0, 255, 136, 0.05);
         }}
         
         .card-title {{
+            font-family: 'Orbitron', sans-serif;
             font-size: 0.9em;
-            color: #6c757d;
+            color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            font-weight: 600;
         }}
         
         .card-value {{
-            font-size: 2.5em;
-            font-weight: 700;
-            color: #333;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyber-green), var(--cyber-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+            animation: countUp 1s ease-out;
         }}
         
+        @keyframes countUp {{
+            from {{ opacity: 0; transform: scale(0.5); }}
+            to {{ opacity: 1; transform: scale(1); }}
+        }}
+        
+        .card.critical .card-value {{
+            background: linear-gradient(135deg, var(--critical-red), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }}
+        
+        .card.high .card-value {{
+            background: linear-gradient(135deg, var(--warning-orange), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }}
+        
+        /* Status Badge with Animation */
         .status-badge {{
             display: inline-block;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 1.1em;
-            margin-top: 10px;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.3em;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            animation: badgePulse 2s infinite;
+        }}
+        
+        @keyframes badgePulse {{
+            0%, 100% {{ transform: scale(1); }}
+            50% {{ transform: scale(1.05); }}
+        }}
+        
+        .status-badge::before {{
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }}
+        
+        .status-badge:hover::before {{
+            width: 300px;
+            height: 300px;
         }}
         
         .status-critical {{
-            background: #dc3545;
+            background: linear-gradient(135deg, var(--critical-red), var(--neon-pink));
             color: white;
+            box-shadow: 0 10px 40px rgba(255, 0, 64, 0.5);
         }}
         
         .status-high {{
-            background: #fd7e14;
+            background: linear-gradient(135deg, var(--warning-orange), var(--neon-pink));
             color: white;
+            box-shadow: 0 10px 40px rgba(255, 149, 0, 0.5);
         }}
         
         .status-moderate {{
-            background: #ffc107;
-            color: #333;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--neon-purple));
+            color: white;
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.5);
         }}
         
         .status-low {{
-            background: #28a745;
-            color: white;
+            background: linear-gradient(135deg, var(--success-green), var(--cyber-green));
+            color: var(--bg-dark);
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.5);
         }}
         
+        /* Vulnerability List with Advanced Animations */
         .vuln-list {{
             list-style: none;
         }}
         
         .vuln-item {{
-            background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideIn 0.6s ease-out;
+        }}
+        
+        @keyframes slideIn {{
+            from {{
+                opacity: 0;
+                transform: translateX(-50px);
+            }}
+            to {{
+                opacity: 1;
+                transform: translateX(0);
+            }}
+        }}
+        
+        .vuln-item::before {{
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--cyber-blue);
+            transition: width 0.4s;
         }}
         
         .vuln-item:hover {{
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateX(10px);
+            border-color: var(--cyber-green);
+            box-shadow: 
+                -10px 0 40px rgba(0, 255, 65, 0.2),
+                0 10px 40px rgba(0, 217, 255, 0.2);
         }}
         
-        .vuln-item.critical {{
-            border-left: 5px solid #dc3545;
+        .vuln-item:hover::before {{
+            width: 100%;
+            opacity: 0.1;
         }}
         
-        .vuln-item.high {{
-            border-left: 5px solid #fd7e14;
+        .vuln-item.critical::before {{
+            background: var(--critical-red);
+        }}
+        
+        .vuln-item.high::before {{
+            background: var(--warning-orange);
         }}
         
         .vuln-header {{
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }}
         
         .vuln-cve {{
-            font-size: 1.2em;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.4em;
             font-weight: 700;
-            color: #333;
-            font-family: 'Courier New', monospace;
+            color: var(--cyber-green);
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            animation: flicker 3s infinite;
+        }}
+        
+        @keyframes flicker {{
+            0%, 100% {{ opacity: 1; }}
+            50% {{ opacity: 0.8; }}
         }}
         
         .severity-badge {{
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }}
+        
+        .severity-badge::after {{
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%) scale(0);
+            border-radius: 50%;
+            transition: transform 0.6s;
+        }}
+        
+        .severity-badge:hover::after {{
+            transform: translate(-50%, -50%) scale(2);
         }}
         
         .severity-critical {{
-            background: #dc3545;
+            background: var(--critical-red);
             color: white;
+            box-shadow: 0 0 20px rgba(255, 0, 64, 0.5);
         }}
         
         .severity-high {{
-            background: #fd7e14;
+            background: var(--warning-orange);
             color: white;
+            box-shadow: 0 0 20px rgba(255, 149, 0, 0.5);
         }}
         
         .severity-medium {{
-            background: #ffc107;
-            color: #333;
+            background: var(--cyber-blue);
+            color: white;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
         }}
         
         .severity-low {{
-            background: #28a745;
-            color: white;
+            background: var(--success-green);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
         }}
         
         .vuln-details {{
-            margin-top: 15px;
+            margin-top: 20px;
         }}
         
         .vuln-row {{
             display: flex;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            transition: all 0.3s;
+        }}
+        
+        .vuln-row:hover {{
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateX(5px);
         }}
         
         .vuln-label {{
+            font-family: 'Orbitron', sans-serif;
             font-weight: 600;
-            color: #6c757d;
-            min-width: 150px;
+            color: var(--cyber-blue);
+            min-width: 180px;
+            font-size: 0.95em;
         }}
         
         .vuln-value {{
-            color: #333;
-            font-family: 'Courier New', monospace;
+            color: var(--text-primary);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.95em;
         }}
         
         .vuln-description {{
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 15px;
-            line-height: 1.6;
-            color: #495057;
+            background: rgba(0, 217, 255, 0.05);
+            border-left: 4px solid var(--cyber-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }}
+        
+        .vuln-description::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }}
+        
+        .vuln-description strong {{
+            color: var(--cyber-green);
+            font-family: 'Orbitron', sans-serif;
         }}
         
         .remediation-box {{
-            background: #e7f3ff;
-            border-left: 4px solid #0066cc;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1), rgba(0, 217, 255, 0.1));
+            border: 2px solid var(--cyber-green);
             padding: 20px;
-            border-radius: 6px;
-            margin-top: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }}
+        
+        .remediation-box::before {{
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 65, 0.2) 0%, transparent 70%);
+            animation: rotate 6s linear infinite;
         }}
         
         .remediation-box strong {{
-            color: #0066cc;
+            color: var(--cyber-green);
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            z-index: 1;
         }}
         
-        .footer {{
-            background: #f8f9fa;
-            padding: 30px;
-            text-align: center;
-            color: #6c757d;
-            border-top: 1px solid #dee2e6;
+        .remediation-box ul {{
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
         }}
         
-        .footer .timestamp {{
-            font-size: 0.9em;
-            margin-top: 10px;
+        .remediation-box li {{
+            margin-bottom: 8px;
+            padding-left: 10px;
+            border-left: 2px solid var(--cyber-green);
+            transition: all 0.3s;
+        }}
+        
+        .remediation-box li:hover {{
+            border-left-width: 4px;
+            padding-left: 15px;
+            color: var(--cyber-green);
         }}
         
         .no-vulns {{
             text-align: center;
-            padding: 40px;
-            color: #6c757d;
-            font-size: 1.1em;
+            padding: 60px;
+            color: var(--success-green);
+            font-size: 1.5em;
+            font-family: 'Orbitron', sans-serif;
+            animation: fadeIn 1s;
         }}
         
+        @keyframes fadeIn {{
+            from {{ opacity: 0; }}
+            to {{ opacity: 1; }}
+        }}
+        
+        /* Footer with Glowing Effect */
+        .footer {{
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-secondary);
+            border-top: 2px solid var(--cyber-blue);
+            position: relative;
+            overflow: hidden;
+        }}
+        
+        .footer::before {{
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyber-green), transparent);
+            animation: footerGlow 3s infinite;
+        }}
+        
+        @keyframes footerGlow {{
+            0% {{ left: -100%; }}
+            100% {{ left: 100%; }}
+        }}
+        
+        .footer strong {{
+            color: var(--cyber-green);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+        }}
+        
+        .footer .timestamp {{
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9em;
+            margin-top: 15px;
+            color: var(--cyber-blue);
+        }}
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {{
+            width: 12px;
+        }}
+        
+        ::-webkit-scrollbar-track {{
+            background: var(--bg-darker);
+            border-left: 1px solid var(--card-border);
+        }}
+        
+        ::-webkit-scrollbar-thumb {{
+            background: linear-gradient(180deg, var(--cyber-green), var(--cyber-blue));
+            border-radius: 6px;
+        }}
+        
+        ::-webkit-scrollbar-thumb:hover {{
+            background: linear-gradient(180deg, var(--cyber-blue), var(--neon-purple));
+        }}
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {{
+            .header h1 {{
+                font-size: 2.5em;
+            }}
+            
+            .dashboard {{
+                grid-template-columns: 1fr;
+            }}
+            
+            .vuln-header {{
+                flex-direction: column;
+                align-items: flex-start;
+            }}
+        }}
+        
+        /* Print Styles */
         @media print {{
             body {{
                 background: white;
-                padding: 0;
+                color: black;
+            }}
+            
+            .matrix-bg, .grid-bg, .scan-line, .particles {{
+                display: none;
             }}
             
             .container {{
@@ -373,17 +896,25 @@ class HTMLReportGenerator:
     </style>
 </head>
 <body>
+    <!-- Animated Backgrounds -->
+    <div class="matrix-bg">
+        <canvas id="matrixCanvas"></canvas>
+    </div>
+    <div class="grid-bg"></div>
+    <div class="scan-line"></div>
+    <div class="particles" id="particles"></div>
+    
     <div class="container">
         <div class="header">
-            <h1>🛡️ LayerGuard</h1>
-            <div class="subtitle">Layer-Aware Container Image Forensic Threat Scanner</div>
+            <h1>🛡️ LAYERGUARD</h1>
+            <div class="subtitle">Layer-Aware Container Forensic Threat Scanner</div>
             <div class="image-name">{self.image_name}</div>
         </div>
         
         <div class="content">
             <!-- Security Summary Dashboard -->
             <div class="section">
-                <h2 class="section-title">Security Summary</h2>
+                <h2 class="section-title">⚡ Security Summary</h2>
                 <div class="dashboard">
                     <div class="card">
                         <div class="card-title">Total Vulnerabilities</div>
@@ -411,49 +942,132 @@ class HTMLReportGenerator:
                     <div class="card">
                         <div class="card-title">Base Layer Vulnerabilities</div>
                         <div class="card-value">{self.classified_vulns['base_count']}</div>
-                        <div style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">
+                        <div style="margin-top: 15px; color: var(--text-secondary); font-size: 0.9em;">
                             Inherited from base image
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-title">Application Layer Vulnerabilities</div>
                         <div class="card-value">{self.classified_vulns['app_count']}</div>
-                        <div style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">
+                        <div style="margin-top: 15px; color: var(--text-secondary); font-size: 0.9em;">
                             From application dependencies
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-title">Total Layers</div>
                         <div class="card-value">{self.layer_analysis['total_layers']}</div>
-                        <div style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">
+                        <div style="margin-top: 15px; color: var(--text-secondary); font-size: 0.9em;">
                             Base: {self.layer_analysis['base_image']}
                         </div>
                     </div>
                 </div>
                 
-                <div style="text-align: center; margin-top: 30px;">
+                <div style="text-align: center; margin-top: 40px;">
                     <div class="status-badge {security_status['class']}">{security_status['text']}</div>
                 </div>
             </div>
             
             <!-- Top Vulnerabilities -->
             <div class="section">
-                <h2 class="section-title">Top High-Severity Vulnerabilities</h2>
+                <h2 class="section-title">🎯 Top High-Severity Vulnerabilities</h2>
                 {self._generate_vulnerability_list(top_vulns)}
             </div>
             
             <!-- Remediation Recommendations -->
             <div class="section">
-                <h2 class="section-title">Remediation Recommendations</h2>
+                <h2 class="section-title">💡 Remediation Recommendations</h2>
                 {self._generate_remediation_section()}
             </div>
         </div>
         
         <div class="footer">
-            <strong>LayerGuard</strong> - Layer-Aware Container Image Forensic Threat Scanner
-            <div class="timestamp">Report generated: {timestamp}</div>
+            <strong>LAYERGUARD</strong> - Elite Container Security Analysis
+            <div class="timestamp">Report Generated: {timestamp}</div>
         </div>
     </div>
+    
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+        
+        function drawMatrix() {{
+            ctx.fillStyle = 'rgba(10, 14, 39, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff41';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {{
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {{
+                    drops[i] = 0;
+                }}
+                drops[i]++;
+            }}
+        }}
+        
+        setInterval(drawMatrix, 50);
+        
+        window.addEventListener('resize', () => {{
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }});
+        
+        // Generate Floating Particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {{
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }}
+        
+        // Smooth Scroll Animation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {{
+            anchor.addEventListener('click', function (e) {{
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {{
+                    target.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+                }}
+            }});
+        }});
+        
+        // Intersection Observer for Animations
+        const observerOptions = {{
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        }};
+        
+        const observer = new IntersectionObserver((entries) => {{
+            entries.forEach(entry => {{
+                if (entry.isIntersecting) {{
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }}
+            }});
+        }}, observerOptions);
+        
+        document.querySelectorAll('.section').forEach(section => {{
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.8s, transform 0.8s';
+            observer.observe(section);
+        }});
+    </script>
 </body>
 </html>"""
         
@@ -490,22 +1104,22 @@ class HTMLReportGenerator:
         """
         if self.vuln_summary['CRITICAL'] > 0:
             return {
-                'text': '❌ CRITICAL - Immediate Action Required',
+                'text': '❌ CRITICAL THREAT DETECTED',
                 'class': 'status-critical'
             }
         elif self.vuln_summary['HIGH'] > 0:
             return {
-                'text': '⚠️ HIGH RISK - Action Recommended',
+                'text': '⚠️ HIGH RISK IDENTIFIED',
                 'class': 'status-high'
             }
         elif self.vuln_summary['MEDIUM'] > 0:
             return {
-                'text': '⚡ MODERATE RISK - Review Recommended',
+                'text': '⚡ MODERATE RISK LEVEL',
                 'class': 'status-moderate'
             }
         else:
             return {
-                'text': '✅ LOW RISK - Continue Monitoring',
+                'text': '✅ SECURE - LOW RISK',
                 'class': 'status-low'
             }
     
@@ -520,7 +1134,7 @@ class HTMLReportGenerator:
             str: HTML content
         """
         if not vulnerabilities:
-            return '<div class="no-vulns">✅ No high-severity vulnerabilities found!</div>'
+            return '<div class="no-vulns">✅ No high-severity vulnerabilities detected!</div>'
         
         html_items = []
         
@@ -530,8 +1144,6 @@ class HTMLReportGenerator:
             package = vuln['package']
             installed = vuln['installed_version']
             fixed = vuln['fixed_version'] or 'Not available'
-            title = vuln.get('title', 'No title available')
-            description = vuln.get('description', 'No description available')
             
             # Generate plain English explanation
             explanation = self._generate_explanation(vuln)
@@ -559,7 +1171,7 @@ class HTMLReportGenerator:
                     </div>
                     
                     <div class="vuln-description">
-                        <strong>What this means:</strong> {explanation}
+                        <strong>Security Impact:</strong> {explanation}
                     </div>
                     
                     {self._generate_remediation_box(vuln)}
@@ -581,13 +1193,12 @@ class HTMLReportGenerator:
         package = vuln['package']
         severity = vuln['severity']
         
-        # Generate contextual explanation based on package type and severity
         if severity == 'CRITICAL':
-            return f"This is a critical security flaw in {package} that could allow attackers to gain unauthorized access, execute malicious code, or compromise your system. Immediate action is required to update or replace this package."
+            return f"This is a critical security flaw in {package} that could allow attackers to gain unauthorized access, execute malicious code, or completely compromise your system. Immediate remediation is required to prevent potential exploitation."
         elif severity == 'HIGH':
-            return f"This high-severity vulnerability in {package} poses a significant security risk and could be exploited by attackers to compromise your application or data. You should prioritize fixing this issue."
+            return f"This high-severity vulnerability in {package} poses a significant security risk and could be exploited by attackers to compromise your application, steal sensitive data, or disrupt operations. Priority remediation is strongly recommended."
         else:
-            return f"This vulnerability in {package} has been identified and should be addressed to maintain security best practices."
+            return f"This vulnerability in {package} has been identified and should be addressed to maintain security best practices and reduce attack surface."
     
     def _generate_remediation_box(self, vuln):
         """
@@ -605,13 +1216,13 @@ class HTMLReportGenerator:
         if fixed and fixed != 'Not available':
             return f"""
                 <div class="remediation-box">
-                    <strong>✅ Fix Available:</strong> Update {package} to version {fixed} or higher to resolve this vulnerability.
+                    <strong>✅ PATCH AVAILABLE:</strong> Update {package} to version {fixed} or higher to eliminate this vulnerability.
                 </div>
             """
         else:
             return f"""
                 <div class="remediation-box">
-                    <strong>⚠️ No Fix Available:</strong> Consider using an alternative package or implementing additional security controls until a patch is released.
+                    <strong>⚠️ NO PATCH AVAILABLE:</strong> Consider implementing compensating controls, using alternative packages, or isolating this component until a security patch is released.
                 </div>
             """
     
@@ -628,7 +1239,7 @@ class HTMLReportGenerator:
         if self.classified_vulns['base_count'] > 0:
             recommendations.append(f"""
                 <div class="remediation-box">
-                    <strong>🔄 Update Base Image:</strong> {self.classified_vulns['base_count']} vulnerabilities are inherited from the base image ({self.layer_analysis['base_image']}). Consider updating to a newer version or switching to a more secure base image variant (e.g., Alpine, Distroless).
+                    <strong>🔄 BASE IMAGE UPDATE REQUIRED:</strong> {self.classified_vulns['base_count']} vulnerabilities are inherited from the base image ({self.layer_analysis['base_image']}). Consider updating to the latest stable version or migrating to a more secure base image variant (Alpine, Distroless, or hardened images).
                 </div>
             """)
         
@@ -637,20 +1248,22 @@ class HTMLReportGenerator:
         if fixable:
             recommendations.append(f"""
                 <div class="remediation-box">
-                    <strong>📦 Update Packages:</strong> {len(fixable)} vulnerable packages have fixes available. Update these packages to their fixed versions to resolve known vulnerabilities.
+                    <strong>📦 PACKAGE UPDATES AVAILABLE:</strong> {len(fixable)} vulnerable packages have security patches available. Update these packages to their fixed versions to resolve known vulnerabilities and reduce attack surface.
                 </div>
             """)
         
-        # General best practices
+        # Security best practices
         recommendations.append("""
             <div class="remediation-box">
-                <strong>🔒 Security Best Practices:</strong>
-                <ul style="margin-top: 10px; margin-left: 20px;">
-                    <li>Use multi-stage builds to minimize attack surface</li>
-                    <li>Remove unnecessary packages and dependencies</li>
-                    <li>Implement regular security scanning in CI/CD pipeline</li>
-                    <li>Keep base images and dependencies up to date</li>
-                    <li>Follow principle of least privilege for container permissions</li>
+                <strong>🔒 SECURITY HARDENING RECOMMENDATIONS:</strong>
+                <ul style="margin-top: 15px; margin-left: 20px; line-height: 1.8;">
+                    <li>Implement multi-stage Docker builds to minimize final image size and attack surface</li>
+                    <li>Remove unnecessary packages, development tools, and build dependencies from production images</li>
+                    <li>Integrate automated security scanning into CI/CD pipeline for continuous monitoring</li>
+                    <li>Establish regular update cycles for base images and application dependencies</li>
+                    <li>Apply principle of least privilege for container runtime permissions and capabilities</li>
+                    <li>Use container image signing and verification to ensure supply chain integrity</li>
+                    <li>Implement runtime security monitoring and anomaly detection</li>
                 </ul>
             </div>
         """)
