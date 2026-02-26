@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Container Image Threat Scanner
-A layer-aware forensic security analysis tool for container images
+LayerGuard - Layer-Aware Container Image Forensic Threat Scanner
+A professional security analysis tool for container images
 
 Usage:
     python main.py --image nginx:latest
@@ -11,6 +11,7 @@ Usage:
 import argparse
 import sys
 import logging
+import webbrowser
 from pathlib import Path
 
 from scanner import (
@@ -18,6 +19,7 @@ from scanner import (
     SBOMGenerator,
     VulnerabilityScanner,
     RemediationEngine,
+    HTMLReportGenerator,
     validate_environment,
     setup_logging
 )
@@ -28,8 +30,8 @@ def print_banner():
     banner = """
 ╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
-║        Container Image Threat Scanner v1.0                   ║
-║        Layer-Aware Forensic Security Analysis                ║
+║                    🛡️  LayerGuard v2.0                       ║
+║        Layer-Aware Container Image Forensic Scanner          ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
     """
@@ -120,7 +122,8 @@ def print_summary(image_name, layer_analysis, vuln_summary, classified_vulns, su
     print("-" * 70)
     print(f"Reports saved in: {Path('reports').absolute()}")
     print(f"  ├─ SBOM:              sbom_{image_name.replace(':', '_').replace('/', '_')}.json")
-    print(f"  └─ Vulnerabilities:   vuln_{image_name.replace(':', '_').replace('/', '_')}.json")
+    print(f"  ├─ Vulnerabilities:   vuln_{image_name.replace(':', '_').replace('/', '_')}.json")
+    print(f"  └─ HTML Report:       report_{image_name.replace(':', '_').replace('/', '_')}.html")
     
     print("\n" + "="*70)
     
@@ -137,12 +140,35 @@ def print_summary(image_name, layer_analysis, vuln_summary, classified_vulns, su
     print("="*70 + "\n")
 
 
+def open_report_in_browser(report_path):
+    """
+    Open HTML report in default browser
+    
+    Args:
+        report_path (Path): Path to HTML report
+    """
+    logger = logging.getLogger(__name__)
+    
+    try:
+        # Convert to absolute path and file:// URL
+        abs_path = report_path.absolute()
+        file_url = abs_path.as_uri()
+        
+        # Open in default browser
+        webbrowser.open(file_url)
+        logger.info(f"✓ Opened report in browser: {abs_path}")
+        
+    except Exception as e:
+        logger.warning(f"Could not auto-open browser: {str(e)}")
+        logger.info(f"Please manually open: {report_path}")
+
+
 def main():
     """Main application entry point"""
     
     # Parse arguments
     parser = argparse.ArgumentParser(
-        description='Container Image Threat Scanner - Layer-aware security analysis',
+        description='LayerGuard - Layer-aware container security analysis',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -175,7 +201,7 @@ Examples:
     
     try:
         # Validate environment
-        logger.info("Step 1/5: Validating environment...")
+        logger.info("Step 1/6: Validating environment...")
         if not validate_environment():
             logger.error("Environment validation failed. Please install required tools.")
             sys.exit(1)
@@ -188,24 +214,25 @@ Examples:
         vuln_scanner = VulnerabilityScanner(image_name)
         
         # Pull image
-        logger.info("Step 2/5: Pulling Docker image...")
+        logger.info("Step 2/6: Pulling Docker image...")
         layer_analyzer.pull_image()
         
         # Analyze layers
-        logger.info("Step 3/5: Analyzing image layers...")
+        logger.info("Step 3/6: Analyzing image layers...")
         layer_analysis = layer_analyzer.analyze_layers()
         
         # Generate SBOM
-        logger.info("Step 4/5: Generating Software Bill of Materials (SBOM)...")
+        logger.info("Step 4/6: Generating Software Bill of Materials (SBOM)...")
         sbom_data = sbom_generator.generate()
         package_count = sbom_generator.get_package_count()
         logger.info(f"Found {package_count} packages in image")
         
         # Scan vulnerabilities
-        logger.info("Step 5/5: Scanning for vulnerabilities...")
+        logger.info("Step 5/6: Scanning for vulnerabilities...")
         vuln_data = vuln_scanner.scan()
         vuln_summary = vuln_scanner.get_vulnerability_summary()
         classified_vulns = vuln_scanner.classify_vulnerabilities_by_layer(layer_analyzer)
+        vulnerable_packages = vuln_scanner.get_vulnerable_packages()
         
         # Generate remediation suggestions
         remediation_engine = RemediationEngine(
@@ -215,6 +242,17 @@ Examples:
         )
         suggestions = remediation_engine.generate_suggestions()
         
+        # Generate HTML report
+        logger.info("Step 6/6: Generating HTML security report...")
+        html_generator = HTMLReportGenerator(
+            image_name,
+            layer_analysis,
+            vuln_summary,
+            classified_vulns,
+            vulnerable_packages
+        )
+        report_path = html_generator.generate()
+        
         # Print comprehensive summary
         print_summary(
             image_name,
@@ -223,6 +261,14 @@ Examples:
             classified_vulns,
             suggestions
         )
+        
+        # Auto-open HTML report in browser
+        open_report_in_browser(report_path)
+        
+        # Final success message
+        print("\n" + "="*70)
+        print("🎉 LayerGuard Scan Complete — Opened Security Report in Browser")
+        print("="*70 + "\n")
         
         # Exit with non-zero code if critical vulnerabilities found
         if vuln_scanner.has_critical_vulnerabilities():
